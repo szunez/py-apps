@@ -14,5 +14,5 @@ def findInDict(needle, haystack):
                 return x
 pdfobject=open('data.pdf','rb')
 pdf=pypdf.PdfFileReader(pdfobject)
-xfa=findInDict('/TR',pdf.resolvedObjects)
+xfa=findInDict('/XFA',pdf.resolvedObjects)
 xml=xfa[7].getObject().getData()

@@ -11,7 +11,7 @@ def accGuess(n) :
 def clearScreen() :
     # for Windows
     if name == 'nt' :
-        _ = sytem('cls')
+        _ = system('cls')
     # for Linux and macOS
     else :
         _ = system('clear')
