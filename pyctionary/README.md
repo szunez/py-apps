@@ -9,7 +9,7 @@
 3. run `python3 main.py`
 4. build your teams with players
 ```
-![](./img/pyctionary.png?raw=true "UI")
+![](./img/pyctionary.png)
 ```
 5. enter the round duration, the default is 60seconds
 6. start drawing... have fun!!!
