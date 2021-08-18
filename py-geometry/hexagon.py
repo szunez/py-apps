@@ -19,15 +19,16 @@ def hexagonPrint(side, height, width) :
     print('\nFor a rectangle containing a right hexagon of side = '+str(side)+' :')
     print('    height = '+str(height))
     print('    width = '+str(width)+'\n')
-    print('             a = '+str(side))
-    print('          ______')
-    print('        /        \  |')
-    print('       /          \ |')
-    print('       \          / | h = '+str(height))
-    print('        \        /  |')
-    print('          ──────    |')
-    print('       ─────────────')
-    print('          w = '+str(width))
+    print('             a = '+str(side)+'\
+        \n          ______\
+        \n        /        \  |\
+        \n       /          \ |\
+        \n       \          / | h = '+str(height)+'\
+        \n        \        /  |\
+        \n          ──────    |\
+        \n       ─────────────\
+        \n          w = '+str(width)+'\n'\
+    )
 hexagon=input('\n             a = side\
         \n          ______\
         \n        /        \  |\
@@ -37,7 +38,8 @@ hexagon=input('\n             a = side\
         \n          ──────    |\
         \n       ─────────────\
         \n          w = width\n\
-        \nWhich dimension of a right hexagon do you wish to specify [side, width, height]? : ')
+        \nWhich dimension of a right hexagon do you wish to specify [side, width, height]? : '\
+    )
 if hexagon[0]=='h' :
     hexagonH()
 elif hexagon[0]=='w' :
