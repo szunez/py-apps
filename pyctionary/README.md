@@ -1,6 +1,6 @@
 # Pyctionary
 
-## Pyctionary is a Python3 implementation of the classic party game 'pictionary'
+## A Python3 implementation of the classic party game 'pictionary'
 
 ### To run
 1. clone or download
