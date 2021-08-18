@@ -22,6 +22,7 @@ def getProfileSections(elevationProfile) :
         d = d + 1
         dd = dd + 1
     return olgaGeometry
+<<<<<<< HEAD
 def alignProfileDataWithSemicolon(profile) :
     i = 0
     j = 0
@@ -39,6 +40,8 @@ def alignProfileDataWithSemicolon(profile) :
         skipped = 0
         j = 0
         i = i + 1
+=======
+>>>>>>> 3ca4ff1715777547068f4b028bce658a67b083df
 def alignProfileData(profile) :
     i = 0
     j = 0
@@ -49,7 +52,11 @@ def alignProfileData(profile) :
             while float(g) > float(geometry[geomIndex][j+repeatData+skipped]) :
                 repeatData = repeatData + 1
             if repeatData > 0 :
+<<<<<<< HEAD
                 profile[i][j] = str(profile[i][j] + ' ') * int(repeatData + 1)
+=======
+                profile[i][j] = str(1 + repeatData) + ':' + profile[i][j]
+>>>>>>> 3ca4ff1715777547068f4b028bce658a67b083df
             skipped = skipped + repeatData
             repeatData = 0
             j = j + 1
@@ -72,12 +79,22 @@ def writeOlgaProfile() :
     reportFile.write(x_positons + '\n' + y_positons + '\n')
     reportFile.write('CATALOG \n1\nPT \'SECTION:\' \'BRANCH:\' \''+simBranch+'\' \'('+y_unit+')\' \'Pressure\'\n')
     reportFile.write('TIME SERIES  \' (S)  \'\n')
+<<<<<<< HEAD
     tthreshold = 0.1 #seconds
     tsimbefore = -1 *  tthreshold
     for k in range(j) :
         y = 0
         tsim = eformat(convertToSec([s for s in data[k] if 'time' in s][0][4:]),6,3)
         for x in data[k][1:] :
+=======
+    tsimbefore = 0.
+    for k in range(j) :
+        tthreshold = 0.1 #seconds
+        y = 0
+        tsim = eformat(convertToSec([s for s in data[k] if 'time' in s][0][4:]),6,3)
+        print(float(tsim)-tsimbefore)
+        for x in data[k] :
+>>>>>>> 3ca4ff1715777547068f4b028bce658a67b083df
             if y == 0 :
                 dataline = str(tsim) + '\n' + x
             elif x[:4] == 'time':
@@ -89,9 +106,15 @@ def writeOlgaProfile() :
             else :
                 dataline = dataline.strip() + str(' ') + x
             y = y + 1
+<<<<<<< HEAD
         if float(tsim) - tsimbefore >= tthreshold :
             reportFile.write(dataline+'\n')
             tsimbefore = float(tsim)
+=======
+        if float(tsim) - tsimbefore < tthreshold :
+            reportFile.write(dataline+'\n')
+        tsimbefore = float(tsim)
+>>>>>>> 3ca4ff1715777547068f4b028bce658a67b083df
     reportFile.close()
 global data, geometry, x_positons, y_positons
 global simCase, simBranch, x_unit, y_unit
