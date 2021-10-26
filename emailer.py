@@ -1,6 +1,6 @@
 import win32com.client
 import sys, getopt
-def goMailer(firstName, emailAddress,message) :
+def goMailer(firstName, emailAddress, message) :
     outlook = win32com.client.Dispatch('outlook.application')
     mail = outlook.CreateItem(0)
     if message == 'midstream' :
