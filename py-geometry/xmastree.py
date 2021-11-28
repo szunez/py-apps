@@ -1,0 +1,25 @@
+import numpy as n
+import math as m
+print('\nHeight and diameter must be input with the same units, length will be output in these units')
+print('\n    *    ↑')
+print('   / \\   | h')
+print('  /   \\  |')
+print(' /     \\ ↓')
+print('   | |')
+print(' ←─────→')
+print('    d')
+height=float(input('\nEnter the tree height (minus any stand height): '))
+diameter=float(input('Enter the tree diameter at the base (widest point): '))
+wraps=float(input('Enter the desired number of wraps around the tree: '))
+r=diameter/2
+t=height
+a=n.pi/2-n.arctan(t/r/wraps)
+l=float(round(0.5*t*m.sqrt(1+(r**2)*(1+(a**2)*(t**2)))+(1+(r**2))/(2*a*r)*n.arcsinh(a*r*t/m.sqrt(1+(r**2))),1))
+print('\nA light string of '+str(l)+' unit length is required')
+print('\n    *    ↑')
+print('   / \\   | h='+str(t))
+print('  /   \\  | n='+str(wraps))
+print(' /     \\ ↓')
+print('   | |')
+print(' ←─────→')
+print('  d='+str(diameter))
