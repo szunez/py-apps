@@ -3,7 +3,7 @@ import os
 from datetime import datetime, timedelta
 outlook = win32com.client.Dispatch('outlook.application')
 mapi = outlook.GetNamespace("MAPI")
-for idx, folder in enumerate(mapi.Folders(1).Folders(7).Folders(1).Folders): 
+for idx, folder in enumerate(mapi.Folders(1).Folders(7).Folders(1).Folders(1).Folders): 
     print(idx+1, folder)
 outbox = mapi.GetDefaultFolder(4)
 sent = mapi.GetDefaultFolder(5).Items
@@ -27,6 +27,8 @@ for msg in list(messages) :
         or customerEmail.find('.xom.com') > 0 \
         or customerEmail.find('@genesisenergies.') > 0 \
         or customerEmail.find('@galp.') > 0 \
+        or customerEmail.find('@technip.') > 0 \
+        or customerEmail.find('@technipfmc.') > 0 \
         or customerEmail.find('@xodusgroup.') > 0 \
         or customerEmail.find('@afs.') > 0 \
         or customerEmail.find('@wintershalldea.') > 0 \
@@ -35,16 +37,16 @@ for msg in list(messages) :
         or customerEmail.find('quantaservices.com') > 0 \
         or customerEmail.find('blade-energy.com') > 0 \
         or customerEmail.find('@nwe.northwesternenergy.com') > 0 \
-        or customerEmail.find('"Organization"=>"Energean') > 0 \
         or customerEmail.find('.local') > 0 \
         or customerEmail.find('@wecenergygroup.com') > 0 \
         or customerEmail.find('@nustarenergy.com') > 0 \
-        or customerEmail == 'Angela.Washington@bwpipelines.com' \
-        or customerEmail == 'Dewayne' :
+        or customerEmail.find('@global.cnooc.corp') > 0 \
+        or customerEmail.find('"Organization"=>"Air Liquide') > 0 \
+        or customerEmail.find('"Organization"=>"Energean') > 0 :
             continue
         else:
-            if db.count(customerEmail) == 0 :
-                db.append(customerEmail)
+            if db.count(str(customerEmail).lower()) == 0 :
+                db.append(str(customerEmail).lower())
 i = 0
 for data in list(db) :
         print(data)
@@ -59,18 +61,18 @@ for snt in list(sent) :
     for recipient in recipients_list:    
         try:
             #contactedCustomer = recipient.AddressEntry.GetExchangeUser().PrimarySmtpAddress
-            contactedCustomer = recipient.Address
+            contactedCustomer = str(recipient.Address).lower()
         except:
             continue
-        if db.count(contactedCustomer) != 0 :
-            db_contacted.append(contactedCustomer)
+        if db.count(str(contactedCustomer).lower()) != 0 :
+            db_contacted.append(str(contactedCustomer).lower())
             print(contactedCustomer)
             j = j + 1
 print('\n',j,'customers have been contacted\n')
 uncontactedCustomers = set(db)- set(db_contacted)
 k = 0
 for uncontacted in uncontactedCustomers :
-    if uncontacted.find('evoelap.') > 0 :
+    if uncontacted.find('evoleap.') > 0 :
         continue
     else:
         print(uncontacted)
