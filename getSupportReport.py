@@ -1,13 +1,14 @@
 import win32com.client
 import os
+from pathlib import Path
 from datetime import datetime, timedelta
-with open('./supportReport.ignore') as f :
+os.chdir('C:\src\py-apps')
+with open('supportReport.ignore') as f :
     ignorefile = f.readlines()
     ignorelist = []
     for val in list(ignorefile) :
         ignorelist.append(val.strip())
 f.close()
-print(ignorelist)
 outlook = win32com.client.Dispatch('outlook.application')
 mapi = outlook.GetNamespace("MAPI")
 #this is code to print out folder names in a given root folder
