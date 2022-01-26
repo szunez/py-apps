@@ -38,10 +38,12 @@ for msg in list(messages) :
         if not customerEmail.find('@') > 0 :
             ignoreCustomer = True
         for ign in ignorelist :
-            if customerEmail.find(ign) > 0 :
+            if str(customerEmail.lower()).find(ign.lower()) > 0 :
                 ignoreCustomer = True
         if ignoreCustomer == False and db.count(str(customerEmail).lower()) == 0 :
             db.append(str(customerEmail).lower())
+            if customerEmail.find('@ali.pri') > 0 :
+                print(customerEmail,'anomaly')
 i = 0
 for data in list(db) :
         print(data)
