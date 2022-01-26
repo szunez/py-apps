@@ -10,6 +10,10 @@ inbox = mapi.GetDefaultFolder(6)
 support = mapi.Folders(1).Folders(7).Folders(1).Items
 accounts = mapi.Folders(1).Folders(27).Folders(3).Folders
 #Folder enums
+e = 1
+for f in list(mapi.Folders(1).Folders) :
+    print(e,f)
+    e = e + 1
 # 1 Deleted Items
 # 2 Inbox
 # 3 Outbox

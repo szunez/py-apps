@@ -1,6 +1,13 @@
 import win32com.client
 import os
 from datetime import datetime, timedelta
+with open('./supportReport.ignore') as f :
+    ignorefile = f.readlines()
+    ignorelist = []
+    for val in list(ignorefile) :
+        ignorelist.append(val.strip())
+f.close()
+print(ignorelist)
 outlook = win32com.client.Dispatch('outlook.application')
 mapi = outlook.GetNamespace("MAPI")
 #this is code to print out folder names in a given root folder
@@ -20,36 +27,20 @@ messages = mapi.Folders(1).Folders(7).Folders(1).Items
 db = []
 db_contacted = []
 for msg in list(messages) :
+    ignoreCustomer = False
     if '"UPN"=>"' in msg.Body :
         findAfter = '"UPN"=>"'
         findUntil = '"}'
         startChar = msg.Body.find(findAfter)+len(findAfter)
         endChar = startChar + msg.Body[msg.Body.find(findAfter)+len(findAfter):len(msg.Body)].find(findUntil)
         customerEmail = msg.Body[startChar:endChar]
-        if customerEmail.find('evoleap.') > 0 \
-        or customerEmail.find('.xom.com') > 0 \
-        or customerEmail.find('@genesisenergies.') > 0 \
-        or customerEmail.find('@galp.') > 0 \
-        or customerEmail.find('@technip.') > 0 \
-        or customerEmail.find('@technipfmc.') > 0 \
-        or customerEmail.find('@xodusgroup.') > 0 \
-        or customerEmail.find('@afs.') > 0 \
-        or customerEmail.find('@wintershalldea.') > 0 \
-        or customerEmail.find('@gate.') > 0 \
-        or customerEmail.find('@rosen-group.') > 0 \
-        or customerEmail.find('quantaservices.com') > 0 \
-        or customerEmail.find('blade-energy.com') > 0 \
-        or customerEmail.find('@nwe.northwesternenergy.com') > 0 \
-        or customerEmail.find('.local') > 0 \
-        or customerEmail.find('@wecenergygroup.com') > 0 \
-        or customerEmail.find('@nustarenergy.com') > 0 \
-        or customerEmail.find('@global.cnooc.corp') > 0 \
-        or customerEmail.find('"Organization"=>"Air Liquide') > 0 \
-        or customerEmail.find('"Organization"=>"Energean') > 0 :
-            continue
-        else:
-            if db.count(str(customerEmail).lower()) == 0 :
-                db.append(str(customerEmail).lower())
+        if not customerEmail.find('@') > 0 :
+            ignoreCustomer = True
+        for ign in ignorelist :
+            if customerEmail.find(ign) > 0 :
+                ignoreCustomer = True
+        if ignoreCustomer == False and db.count(str(customerEmail).lower()) == 0 :
+            db.append(str(customerEmail).lower())
 i = 0
 for data in list(db) :
         print(data)
