@@ -42,8 +42,6 @@ for msg in list(messages) :
                 ignoreCustomer = True
         if ignoreCustomer == False and db.count(str(customerEmail).lower()) == 0 :
             db.append(str(customerEmail).lower())
-            if customerEmail.find('@ali.pri') > 0 :
-                print(customerEmail,'anomaly')
 i = 0
 for data in list(db) :
         print(data)
