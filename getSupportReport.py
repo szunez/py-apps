@@ -35,18 +35,26 @@ for msg in list(messages) :
         startChar = msg.Body.find(findAfter)+len(findAfter)
         endChar = startChar + msg.Body[msg.Body.find(findAfter)+len(findAfter):len(msg.Body)].find(findUntil)
         customerEmail = msg.Body[startChar:endChar]
-        if not customerEmail.find('@') > 0 :
+    elif '"email"=>"' in msg.Body :
+        findAfter = '"email"=>"'
+        findUntil = '"}'
+        startChar = msg.Body.find(findAfter)+len(findAfter)
+        endChar = startChar + msg.Body[msg.Body.find(findAfter)+len(findAfter):len(msg.Body)].find(findUntil)
+        customerEmail = msg.Body[startChar:endChar]
+    else :
+        continue
+    if not customerEmail.find('@') >= 0 :
+        ignoreCustomer = True
+    for ign in ignorelist :
+        if str(customerEmail.lower()).find(ign.lower()) >= 0 :
             ignoreCustomer = True
-        for ign in ignorelist :
-            if str(customerEmail.lower()).find(ign.lower()) > 0 :
-                ignoreCustomer = True
-        if ignoreCustomer == False and db.count(str(customerEmail).lower()) == 0 :
-            db.append(str(customerEmail).lower())
+    if ignoreCustomer == False and db.count(str(customerEmail).lower()) == 0 :
+        db.append(str(customerEmail).lower())
 i = 0
 for data in list(db) :
         print(data)
         i = i + 1
-print('\n',i-1,'unique customer email addresses were found\n')
+print('\n',i,'unique customer email addresses were found\n')
 j = 0
 for snt in list(sent) :
     recipients = snt.Recipients
@@ -59,7 +67,7 @@ for snt in list(sent) :
             contactedCustomer = str(recipient.Address).lower()
         except:
             continue
-        if db.count(str(contactedCustomer).lower()) != 0 :
+        if db.count(str(contactedCustomer).lower()) != 0 and db_contacted.count(str(contactedCustomer).lower()) == 0 :
             db_contacted.append(str(contactedCustomer).lower())
             print(contactedCustomer)
             j = j + 1
@@ -72,4 +80,4 @@ for uncontacted in uncontactedCustomers :
     else:
         print(uncontacted)
         k = k + 1
-print('\n',k-1,'customers to contact\n')
+print('\n',k,'customers to contact\n')
