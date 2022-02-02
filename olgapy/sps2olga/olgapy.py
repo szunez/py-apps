@@ -76,11 +76,6 @@ def writeOlgaProfile() :
     tthreshold = 0.1 #seconds
     tsimbefore = -1 *  tthreshold
     for k in range(j) :
-        y = 0
-        tsim = eformat(convertToSec([s for s in data[k] if 'time' in s][0][4:]),6,3)
-        for x in data[k][1:] :
-    tsimbefore = 0.
-    for k in range(j) :
         tthreshold = 0.1 #seconds
         y = 0
         tsim = eformat(convertToSec([s for s in data[k] if 'time' in s][0][4:]),6,3)
