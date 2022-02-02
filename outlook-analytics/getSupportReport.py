@@ -2,7 +2,7 @@ import win32com.client
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
-os.chdir('C:\src\py-apps')
+os.chdir('C:\src\py-apps\outlook-analytics')
 with open('supportReport.ignore') as f :
     ignorefile = f.readlines()
     ignorelist = []
