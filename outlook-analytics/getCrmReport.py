@@ -43,6 +43,7 @@ for f in list(mapi.Folders(1).Folders) :
 #27 BD | 27.3 accounts
 #28 News
 #reportFolder = Path(os.path.expanduser('~')+'/src/py-apps/reports/')
+os.chdir('C:\src\py-apps\outlook-analytics')
 reportFile = open('./reports/report.csv','w')
 reportFile.write('Client,Date sent,To,From\n')
 for i in range(1, len(accounts)) :
