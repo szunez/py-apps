@@ -28,7 +28,8 @@ def get_tpl_list() :
             tpldata.append(var.strip())
     f.close()
 def get_trenddata() :
-    with open('test.tpl') as f :
+    tplfile='test.tpl'
+    with open(tplfile) as f :
         global tplvars
         global tpldata
         tpllines = f.readlines()
@@ -40,8 +41,8 @@ def get_trenddata() :
                     linecatalog = i
                 i = i + 1
         f.close()
-        tplvars = np.genfromtxt('test.tpl', delimiter='\n', dtype=str, skip_header=linecatalog + 2, max_rows=int(tpllines[linecatalog + 1]))
-        tpldata = np.genfromtxt('test.tpl', delimiter=' ',skip_header=linecatalog + 3 + int(tpllines[linecatalog + 1]))
+        tplvars = np.genfromtxt(tplfile, delimiter='\n', dtype=str, skip_header=linecatalog + 2, max_rows=int(tpllines[linecatalog + 1]))
+        tpldata = np.genfromtxt(tplfile, delimiter=' ',skip_header=linecatalog + 3 + int(tpllines[linecatalog + 1]))
         tplvarsraw = tpllines[linecatalog + 2:linecatalog + 2 + int(tpllines[linecatalog + 1])]      
         tplvarsraw.insert(0,tpllines[linecatalog + 2 + int(tpllines[linecatalog + 1])])
         tplvars = []
