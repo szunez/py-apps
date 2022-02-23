@@ -5,7 +5,6 @@ import scipy.stats
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import time
 def get_tpl_list() :
     with open('test-small.tpl') as f :
         global tplvars
