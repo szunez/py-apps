@@ -28,7 +28,7 @@ def get_tpl_list() :
             tpldata.append(var.strip())
     f.close()
 def get_trenddata() :
-    tplfile='test.tpl'
+    tplfile='test.tpl' #this should be assigned to commandline args
     with open(tplfile) as f :
         global tplvars
         global tpldata
