@@ -24,7 +24,7 @@ for t in teams :
         data[j] = re.sub("<.*?>", "", str(d))
         j = j + 1
     print(teams[i])
-    print('World Championships=',data[7])
+    print('World Championships =',data[7])
     print('Pole Postions =',data[9])
     print('Fastest Laps =',data[10],'\n')
     i = i + 1
