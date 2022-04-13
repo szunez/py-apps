@@ -1,6 +1,19 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
+import pandas as pd
+pd.set_option('display.max_rows', None)
+def getdata(url) :
+    global data
+    page = urlopen(url)
+    html = page.read().decode("utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+    data = soup.find_all('td')
+    j = 0
+    for d in data :
+        data[j] = re.sub("<.*?>", "", str(d))
+        data[j] = data[j].replace("\n", "")
+        j = j + 1
 teams=["Ferrari", \
     "Mercedes", \
     "Red-Bull-Racing", \
@@ -12,13 +25,27 @@ teams=["Ferrari", \
     "Williams", \
     "Aston-Martin", \
 ]
+getdata("https://www.formula1.com/en/results.html/2022/drivers.html")
 i = 0
+pos = []
+driver = []
+car = []
+pts = []
+for i in range(0,20) :
+    pos.append(data[1+i*7])
+    driver.append(data[2+i*7])
+    car.append(data[4+i*7])
+    pts.append(data[5+i*7])
+i = 0
+s1 = pd.Series(pos)
+s2 = pd.Series(driver)
+s3 = pd.Series(car)
+s4 = pd.Series(pts)
+driver_standing = pd.DataFrame(list(zip(s1,s2,s3,s4)), columns=['POS','Driver','Car','PTS']).set_index('POS')
+driver_standing.style.set_properties(subset=['Driver','Car'], **{'text-align': 'right'})
+print(driver_standing,'\n')
 for t in teams :
-    url="https://www.formula1.com/en/teams/"+teams[i]+".html"
-    page = urlopen(url)
-    html = page.read().decode("utf-8")
-    soup = BeautifulSoup(html, "html.parser")
-    data = soup.find_all('td')
+    getdata("https://www.formula1.com/en/teams/"+teams[i]+".html")
     j = 0
     for d in data :
         data[j] = re.sub("<.*?>", "", str(d))
