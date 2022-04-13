@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import re
 import pandas as pd
 pd.set_option('display.max_rows', None)
+pd.set_option('colheader_justify', 'left')
 def getdata(url) :
     global data
     page = urlopen(url)
@@ -42,7 +43,6 @@ s2 = pd.Series(driver)
 s3 = pd.Series(car)
 s4 = pd.Series(pts)
 driver_standing = pd.DataFrame(list(zip(s1,s2,s3,s4)), columns=['POS','Driver','Car','PTS']).set_index('POS')
-driver_standing.style.set_properties(subset=['Driver','Car'], **{'text-align': 'right'})
 print(driver_standing,'\n')
 for t in teams :
     getdata("https://www.formula1.com/en/teams/"+teams[i]+".html")
