@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
+import numpy as np
 import pandas as pd
 pd.set_option('display.max_rows', None)
 pd.set_option('colheader_justify', 'left')
@@ -61,6 +62,7 @@ def getdriverstanding() :
     driver_standing = pd.DataFrame(list(zip(s1,s2,s3,s4)), columns=['POS','Driver','Car','PTS']).set_index('POS')
     print(driver_standing,'\n')
 def getracedata() :
+    racedata = np.zeros(180).reshape(20,9)
     getdata("https://www.formula1.com/en/results.html/2022/races.html")
     races = int(len(data)/8)
     for r in range(0,races) :
@@ -69,7 +71,12 @@ def getracedata() :
         final = str(data[1+r*8]).find('.html">')+len(".html")
         getdata(str("https://www.formula1.com") + str(data[1+r*8])[start:final])
         cleandata()
-        print(data)
+        n = 0
+        for d in data :
+            while n > 9 :
+                racedata = np.array(data[n,d])
+                n = n + 1
+        print(racedata)
 #getdriverstanding()
 #getteammetrics()
 getracedata()
