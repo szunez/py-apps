@@ -14,3 +14,4 @@ olgapy/sps2olga/fake.ppl
 olgapy/test-small.tpl
 olgapy/test.tpl
 statistics/stats.py
+__pycache__

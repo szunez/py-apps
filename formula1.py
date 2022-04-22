@@ -79,4 +79,8 @@ def getracedata() :
         print(racedata)
 #getdriverstanding()
 #getteammetrics()
-getracedata()
+#getracedata()
+#************************************************************
+#                           example                          
+#************************************************************
+#>>>python -c 'import formula1; formula1.getdriverstanding()'
