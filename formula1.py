@@ -1,4 +1,3 @@
-import string
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
@@ -47,6 +46,7 @@ def getteammetrics() :
         print('Pole Postions =',data[9])
         print('Fastest Laps =',data[10],'\n')
         i = i + 1
+    quit()
 def getdriverstanding() :
     getdata("https://www.formula1.com/en/results.html/2022/drivers.html")
     cleandata()
@@ -66,6 +66,7 @@ def getdriverstanding() :
     s4 = pd.Series(pts)
     driver_standing = pd.DataFrame(list(zip(s1,s2,s3,s4)), columns=['POS','Driver','Car','PTS']).set_index('POS')
     print(driver_standing,'\n')
+    quit()
 def getracedata() :
     getdata("https://www.formula1.com/en/results.html/2022/races.html")
     races = int(len(data)/8)
@@ -85,3 +86,4 @@ def getracedata() :
                 x = 0
                 p = p + 1
     print(np.delete(racedata,[0,8],1))
+    quit()
