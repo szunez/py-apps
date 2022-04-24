@@ -7,7 +7,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('colheader_justify', 'left')
 def help() :
     print('\nRetrieve, process and summarise data published on www.formula1.com')
-    print('Available functions include:\n   getteammetrics()\n   getdriverstanding()\n   getreacedata()')
+    print('Available functions include:\n    getteammetrics()\n    getdriverstanding()\n    getteamstanding()\n    getreacedata()')
     print('\nUsage example:\n>>>python -c \'import formula1 as f1; f1.getdriverstanding()\'')
 def getdata(url) :
     global data
@@ -55,16 +55,35 @@ def getdriverstanding() :
     driver = []
     car = []
     pts = []
-    for i in range(0,int(len(data)/7)) :
-        pos.append(data[1+i*7])
-        driver.append(data[2+i*7])
-        car.append(data[4+i*7])
-        pts.append(data[5+i*7])
+    n=7
+    for i in range(0,int(len(data)/n)) :
+        pos.append(data[1+i*n])
+        driver.append(data[2+i*n])
+        car.append(data[4+i*n])
+        pts.append(data[5+i*n])
     s1 = pd.Series(pos)
     s2 = pd.Series(driver)
     s3 = pd.Series(car)
     s4 = pd.Series(pts)
     driver_standing = pd.DataFrame(list(zip(s1,s2,s3,s4)), columns=['POS','Driver','Car','PTS']).set_index('POS')
+    print(driver_standing,'\n')
+    quit()
+def getteamstanding() :
+    getdata("https://www.formula1.com/en/results.html/2022/team.html")
+    cleandata()
+    i = 0
+    pos = []
+    team = []
+    pts = []
+    n=5
+    for i in range(0,int(len(data)/n)) :
+        pos.append(data[1+i*n])
+        team.append(data[2+i*n])
+        pts.append(data[3+i*n])
+    s1 = pd.Series(pos)
+    s2 = pd.Series(team)
+    s3 = pd.Series(pts)
+    driver_standing = pd.DataFrame(list(zip(s1,s2,s3)), columns=['POS','Team','PTS']).set_index('POS')
     print(driver_standing,'\n')
     quit()
 def getracedata() :
