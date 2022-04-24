@@ -6,6 +6,10 @@ import numpy as np
 import pandas as pd
 pd.set_option('display.max_rows', None)
 pd.set_option('colheader_justify', 'left')
+def help() :
+    print('\nRetrieve, process and summarise data published on www.formula1.com')
+    print('Available functions include:\n   getreammetrics\n   getdriverstanding\n   getreacedata')
+    print('\nUsage example:\n>>>python -c \'import formula1; formula1.getdriverstanding()\'')
 def getdata(url) :
     global data
     page = urlopen(url)
@@ -81,10 +85,3 @@ def getracedata() :
                 x = 0
                 p = p + 1
     print(np.delete(racedata,[0,8],1))
-#getdriverstanding()
-#getteammetrics()
-#getracedata()
-#************************************************************
-#                           example                          
-#************************************************************
-#>>>python -c 'import formula1; formula1.getdriverstanding()'
