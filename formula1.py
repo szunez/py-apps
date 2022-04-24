@@ -8,7 +8,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('colheader_justify', 'left')
 def help() :
     print('\nRetrieve, process and summarise data published on www.formula1.com')
-    print('Available functions include:\n   getreammetrics\n   getdriverstanding\n   getreacedata')
+    print('Available functions include:\n   getteammetrics\n   getdriverstanding\n   getreacedata')
     print('\nUsage example:\n>>>python -c \'import formula1; formula1.getdriverstanding()\'')
 def getdata(url) :
     global data
