@@ -55,7 +55,7 @@ def getdriverstanding() :
     driver = []
     car = []
     pts = []
-    for i in range(0,20) :
+    for i in range(0,int(len(data)/7)) :
         pos.append(data[1+i*7])
         driver.append(data[2+i*7])
         car.append(data[4+i*7])
