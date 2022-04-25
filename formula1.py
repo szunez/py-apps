@@ -105,4 +105,7 @@ def getracedata() :
                 x = 0
                 p = p + 1
     print(np.delete(racedata,[0,8],1))
+    #for d in racedata[0,3,:22] :
+    #    driver = np.where(racedata[:4,3,:22] == d)
+    #    print(d,driver[1])
     quit()
