@@ -25,4 +25,7 @@ def go(url, el, x0, xn, dx, z0, dz) :
     cleandata()
     for i in range(x0,xn) :
         print(data[z0+i*dx],data[z1+i*dx],"\n")
-go("https://www.reuters.com/business/energy/who-is-still-buying-russian-crude-oil-2022-03-21/", "p", 0, 32, 2, 10, 1)
+#go("https://www.reuters.com/business/energy/who-is-still-buying-russian-crude-oil-2022-03-21/", "p", 0, 32, 2, 10, 1)
+#go("https://event.crowdcompass.com/psig2022/custom-list/RG93bmxvYWQgcGFwZXJz?title=Download%20papers", "li", 0, 1, 1, 1, 1)
+getdata("https://event.crowdcompass.com/psig2022/custom-list/RG93bmxvYWQgcGFwZXJz?title=Download%20papers", "li")
+print(data)
