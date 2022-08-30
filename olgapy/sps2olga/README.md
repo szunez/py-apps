@@ -1,6 +1,6 @@
 # Converter SPS to OLGA .ppl files
 ## Purpose
-This program reads the output from an SPS simulation script, then writes these data in the OLGA .ppl format.  This program was intended to allow SPS transient profiles to be plotted in flotools, as a temporary measure.
+This program reads the output from an SPS simulation script, then writes these data in the OLGA .ppl format.  This program was intended to allow SPS transient profiles to be plotted in [flotools](https://evoleap.com/software#flotools-section).
 
 ## Execution
 This program is run from a UNIX-type commandline interface (CLI), such as GitBash.  The expected input is a .txt file, which was generated from SPS.  Optionally, the output OLGA .ppl file can be assigned Case and Branch labels.  Additionally, horizontal (x) and vertical (y) distance units can be assigned.  Default units for x and y are ‘M’.
