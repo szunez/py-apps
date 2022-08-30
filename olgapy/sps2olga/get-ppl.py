@@ -117,7 +117,7 @@ strKeep = 'time'
 #   options
 if len(sys.argv) > 1 :
     if sys.argv[1] == '-h' or sys.argv[1] == '--help' or sys.argv[1] == '-man' :
-        print('*' * 99+'\n*     Welcome to get-PPL!, a Python 3.x command-line utility for working with OLGA output data     *\n'+'*' * 99+'\nusage: python get-ppl.py sps_sim_data [--help][--debug][--case][--branch][--x_unit][--y_unit]\n	\nwhere: sps_sim_data is a path and filename of .txt output file [ ./data/P_liq.txt ] \n \noptions:\n	[--help   [-h][-man] documentation]\n	[--debug  [-d] write debug.log file]\n	[--case   [-c] define a case name, default case name is \'fake\']\n	[--branch [-b] define a branch name, default case name is \'fake\']\n	[--x_unit [-x] specify units for profile distances]\n	[--y_unit [-y] specify units for profile variable]\n	')
+        print('*' * 99+'\n*     Welcome to get-PPL!, a Python 3.x command-line utility for working with OLGA output data    *\n'+'*' * 99+'\nusage: python get-ppl.py sps_sim_data [--help][--debug][--case][--branch][--x_unit][--y_unit]\n	\nwhere: sps_sim_data is a path and filename of .txt output file [ ./data/P_liq.txt ] \n \noptions:\n	[--help   [-h][-man] documentation]\n	[--debug  [-d] write debug.log file]\n	[--case   [-c] define a case name, default case name is \'fake\']\n	[--branch [-b] define a branch name, default case name is \'fake\']\n	[--x_unit [-x] specify units for profile distances]\n	[--y_unit [-y] specify units for profile variable]\n	')
         quit()
     for i in range(len(sys.argv)) :
         if sys.argv[i] == '--case' or sys.argv[i] == '-c' :
