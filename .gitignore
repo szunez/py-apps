@@ -1,5 +1,5 @@
-conway
-dalle-playground
+conway/
+dalle-playground/
 py-examples/py-examples.code-workspace
 py-apps.code-workspace
 py4ai/
@@ -7,7 +7,7 @@ py4e-Assignments/
 selection_histogram.py
 bukowski/ch-histo.html
 pdfminer
-agilecrm-scrape
+agilecrm-scrape/
 outlook-analytics/reports/
 supportReport.ignore
 olgapy/data/PIG1W_FTL_QLST-3_WC-0_GL-0_TM-55_315.tpl
