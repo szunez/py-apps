@@ -2,16 +2,17 @@ import win32com.client
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
+n_mailbox = 2 #set this if to the mailbox of interest, if there are multiple mailboxes for the account
 outlook = win32com.client.Dispatch('outlook.application')
 mapi = outlook.GetNamespace("MAPI")
 outbox = mapi.GetDefaultFolder(4)
 sent = mapi.GetDefaultFolder(5).Items
 inbox = mapi.GetDefaultFolder(6)
-support = mapi.Folders(1).Folders(7).Folders(1).Items
-accounts = mapi.Folders(1).Folders(27).Folders(3).Folders
+support = mapi.Folders(n_mailbox).Folders(7).Folders(1).Items
+accounts = mapi.Folders(n_mailbox).Folders(27).Folders(3).Folders
 #Folder enums
 e = 1
-for f in list(mapi.Folders(1).Folders) :
+for f in list(mapi.Folders(2).Folders) :
     print(e,f)
     e = e + 1
 # 1 Deleted Items
@@ -48,7 +49,7 @@ reportFile = open('./reports/report.csv','w')
 reportFile.write('Client,Date sent,To,From\n')
 for i in range(1, len(accounts)) :
     reportFile.write(str(accounts(i))+'\n')
-    for msg in list(mapi.Folders(1).Folders(27).Folders(3).Folders(i).Items) :
+    for msg in list(mapi.Folders(n_mailbox).Folders(27).Folders(3).Folders(i).Items) :
         try : 
             reportFile.write(','+str(msg.ReceivedTime.strftime("%Y-%m-%d"))+',"'+str(msg.To)+'","'+str(msg.SenderName)+'"\n')
         except :
