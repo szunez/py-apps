@@ -2,57 +2,45 @@ import win32com.client
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
-n_mailbox = 2 #set this if to the mailbox of interest, if there are multiple mailboxes for the account
+def debug() :
+    outlook = win32com.client.Dispatch('outlook.application')
+    mapi = outlook.GetNamespace("MAPI")
+    accounts = outlook.Session.Accounts
+    for account in accounts:
+        print("Account:", account.DisplayName)
+        for folder in account.DeliveryStore.GetRootFolder().Folders:
+            print("Folder:", folder.Name)
+    quit()
+def enums(n_mailbox, fldr, subfldr) :
+    e = 1
+    if fldr == "":
+        for f in list(mapi.Folders(n_mailbox).Folders) :
+            print(e,f)
+            e = e + 1
+    elif subfldr == "":
+        for f in list(mapi.Folders(n_mailbox).Folders(fldr).Folders) :
+            print(e,f)
+            e = e + 1
+    else:
+        for f in list(mapi.Folders(n_mailbox).Folders(fldr).Folders(subfldr).Folders) :
+            print(e,f)
+            e = e + 1
+    return
+n_mailbox = 3 #set this if to the mailbox of interest, if there are multiple mailboxes for the account
 outlook = win32com.client.Dispatch('outlook.application')
 mapi = outlook.GetNamespace("MAPI")
-outbox = mapi.GetDefaultFolder(4)
-sent = mapi.GetDefaultFolder(5).Items
-inbox = mapi.GetDefaultFolder(6)
-support = mapi.Folders(n_mailbox).Folders(7).Folders(1).Items
-accounts = mapi.Folders(n_mailbox).Folders(27).Folders(3).Folders
-#Folder enums
-e = 1
-for f in list(mapi.Folders(2).Folders) :
-    print(e,f)
-    e = e + 1
-# 1 Deleted Items
-# 2 Inbox
-# 3 Outbox
-# 4 Sent Items
-# 5 ExternalContacts
-# 6 HR
-# 7 IT
-# 8 Journal
-# 9 Notes
-#10 PersonMetadata
-#11 Quick Step Settings
-#12 RSS Feeds
-#13 Social Activity Notifications
-#14 Sync Issues
-#15 updates
-#16 Yammer Root
-#17 Files
-#18 Snoozed
-#19 Conversation History
-#20 Drafts
-#21 Junk Email
-#22 Tasks
-#23 Contacts
-#24 Conversation Action Settings
-#25 Calendar
-#26 Archive
-#27 BD | 27.3 accounts
-#28 News
-#reportFolder = Path(os.path.expanduser('~')+'/src/py-apps/reports/')
+customers = mapi.Folders(n_mailbox).Folders(27).Folders(3).Folders
+reportFolder = Path(os.path.expanduser('~')+'/src/py-apps/reports/')
 os.chdir('C:\src\py-apps\outlook-analytics')
 reportFile = open('./reports/report.csv','w')
 reportFile.write('Client,Date sent,To,From\n')
-for i in range(1, len(accounts)) :
-    reportFile.write(str(accounts(i))+'\n')
+for i in range(1, len(customers)) :
+    reportFile.write(str(customers(i))+'\n')
     for msg in list(mapi.Folders(n_mailbox).Folders(27).Folders(3).Folders(i).Items) :
         try : 
             reportFile.write(','+str(msg.ReceivedTime.strftime("%Y-%m-%d"))+',"'+str(msg.To)+'","'+str(msg.SenderName)+'"\n')
         except :
             reportFile.write(',,message details are not available\n')
 reportFile.close()
+print('email scan is completed.')
 quit()
