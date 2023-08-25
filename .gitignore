@@ -21,3 +21,5 @@ olgapy/sps2olga/data/P_liq1.txt
 olgapy/sps2olga/data/profile.csv
 statistics/stats.py
 __pycache__
+py-geometry/illions.csv
+olgapy/sps2olga.zip
