@@ -2,6 +2,7 @@ import PyPDF2
 import pyttsx3
 import sys
 import os
+import re
 
 # Step 1: Extract text from PDF
 def extract_text_from_pdf(pdf_path):
@@ -9,16 +10,22 @@ def extract_text_from_pdf(pdf_path):
     with open(pdf_path, "rb") as file:
         reader = PyPDF2.PdfReader(file)
         for page in reader.pages:
-            text += page.extract_text() + " "  # Add space between pages
+            page_text = page.extract_text()
+            if page_text:
+                # Replace single newlines with spaces, keep double newlines for paragraphs
+                cleaned_text = re.sub(r'(?<!\n)\n(?!\n)', ' ', page_text)
+                text += cleaned_text + "  "  # Add double space between pages
+    # Normalize multiple spaces and trim
+    text = re.sub(r'\s+', ' ', text).strip()
     return text
 
 # Step 2: Convert text to MP3
 def text_to_mp3(text, output_path):
-    engine = pyttsx3.init()
+    engine = pyttsx3.init(driverName='sapi5')
     # Optional: Adjust voice settings
-    engine.setProperty("rate", 300)  # Speed (words per minute)
+    engine.setProperty("rate", 200)  # Speed (words per minute)
     voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[0].id)  # Change index for different voices
+    engine.setProperty("voice", voices[1].id)  # Change index for different voices
     # Save to MP3
     engine.save_to_file(text, output_path)
     engine.runAndWait()
