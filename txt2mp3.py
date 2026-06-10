@@ -2,12 +2,14 @@ import pyttsx3
 import sys
 import os
 import re
-from pydub import AudioSegment
+import argparse
+import subprocess
 import tempfile
 from tqdm import tqdm
 
-# Note: Requires pip install pyttsx3 pydub tqdm
+# Note: Requires pip install pyttsx3 tqdm
 # For MP3 export, install ffmpeg: https://ffmpeg.org/download.html (add to PATH)
+# (pydub removed: it depends on the audioop module, which was removed in Python 3.13+)
 
 # Step 1: Read text from TXT file
 def read_text_from_file(txt_path):
@@ -53,18 +55,49 @@ def get_chunks(s, max_length=4000):
         start = last_space + 1
     return chunks
 
+# Map common language codes to names found in installed voice descriptions
+LANG_ALIASES = {
+    "en": "english", "es": "spanish", "fr": "french", "de": "german",
+    "it": "italian", "pt": "portuguese", "nl": "dutch", "ru": "russian",
+    "zh": "chinese", "ja": "japanese", "ko": "korean", "ar": "arabic",
+    "hi": "hindi", "pl": "polish", "sv": "swedish", "tr": "turkish",
+    "el": "greek", "he": "hebrew", "da": "danish", "no": "norwegian",
+    "fi": "finnish", "cs": "czech",
+}
+
+def find_voice_id(language):
+    """Return the id of an installed voice matching the requested language, or None."""
+    lang = language.strip().lower()
+    name_match = LANG_ALIASES.get(lang, lang)  # accept codes ("es") or names ("spanish")
+    engine = pyttsx3.init()
+    voices = engine.getProperty("voices")
+    engine.stop()
+
+    for voice in voices:
+        descriptor = f"{voice.name} {voice.id}".lower()
+        # Also check the voice's language tags (e.g. 'en_US'), if provided
+        tags = " ".join(
+            t.decode(errors="ignore") if isinstance(t, bytes) else str(t)
+            for t in (voice.languages or [])
+        ).lower().replace("_", "-")
+        if name_match in descriptor or f"{lang}-" in tags or tags == lang:
+            return voice.id
+
+    print(f"Warning: no installed voice found for language '{language}'. Using system default.")
+    print("Installed voices:")
+    for voice in voices:
+        print(f"  - {voice.name}")
+    return None
+
 # Step 2: Convert text chunk to WAV
-def text_chunk_to_wav(text_chunk, wav_path):
+def text_chunk_to_wav(text_chunk, wav_path, voice_id=None):
     try:
         engine = pyttsx3.init()  # Auto-detect driver
         # Adjust voice settings
         engine.setProperty("rate", 200)  # Speed (words per minute)
-        voices = engine.getProperty("voices")
-        if len(voices) > 1:
-            engine.setProperty("voice", voices[1].id)
-        else:
-            engine.setProperty("voice", voices[0].id)
-        
+        if voice_id:
+            engine.setProperty("voice", voice_id)
+
         # Save to WAV
         engine.save_to_file(text_chunk, wav_path)
         engine.runAndWait()
@@ -74,37 +107,60 @@ def text_chunk_to_wav(text_chunk, wav_path):
         print(f"Error during text-to-speech conversion for chunk: {str(e)}")
         return False
 
-# Step 3: Merge WAV files into MP3
+# Step 3: Merge WAV files into MP3 using ffmpeg directly (no pydub/audioop needed)
 def merge_wavs_to_mp3(wav_files, mp3_path):
     try:
-        combined = AudioSegment.empty()
-        for wav_file in tqdm(wav_files, desc="Merging audio files", unit="file", colour="yellow"):
-            audio = AudioSegment.from_wav(wav_file)
-            combined += audio
+        # Build an ffmpeg concat list file
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False, encoding="utf-8") as list_file:
+            for wav_file in wav_files:
+                # Escape single quotes per ffmpeg concat demuxer rules
+                escaped = wav_file.replace("'", "'\\''")
+                list_file.write(f"file '{escaped}'\n")
+            list_path = list_file.name
+
         print("Encoding final MP3 (this may take a while for large files)...")
-        combined.export(mp3_path, format="mp3", bitrate="128k", parameters=["-preset", "fast"])
+        try:
+            result = subprocess.run(
+                [
+                    "ffmpeg", "-y",
+                    "-f", "concat", "-safe", "0",
+                    "-i", list_path,
+                    "-b:a", "128k",
+                    mp3_path,
+                ],
+                capture_output=True,
+                text=True,
+            )
+        finally:
+            os.unlink(list_path)
+
+        if result.returncode != 0:
+            print(f"ffmpeg error:\n{result.stderr}")
+            return False
         return True
+    except FileNotFoundError:
+        print("Error: ffmpeg not found. Install it from https://ffmpeg.org/download.html and add it to PATH.")
+        return False
     except Exception as e:
         print(f"Error merging audio files: {str(e)}")
         return False
 
 # Step 4: Convert text to MP3 with overall progress bar
-def text_to_mp3(text, output_path):
+def text_to_mp3(text, output_path, voice_id=None):
     # Split into chunks
     chunks = get_chunks(text, max_length=4000)
     print(f"Split into {len(chunks)} chunks")
-    
+
     total_steps = len(chunks) + 1  # Chunks + final MP3 export
     with tqdm(total=total_steps, desc="Overall progress", unit="step", colour="yellow") as pbar:
         wav_files = []
-        base_dir = os.path.dirname(output_path) or '.'
         with tempfile.TemporaryDirectory() as temp_dir:
             # Process chunks
             for i, chunk in enumerate(tqdm(chunks, desc="Processing chunks", unit="chunk", colour="yellow")):
                 if not chunk.strip():
                     continue
                 wav_filename = os.path.join(temp_dir, f"chunk_{i}.wav")
-                if text_chunk_to_wav(chunk, wav_filename):
+                if text_chunk_to_wav(chunk, wav_filename, voice_id):
                     if os.path.exists(wav_filename) and os.path.getsize(wav_filename) > 100:  # Minimal check
                         wav_files.append(wav_filename)
                     else:
@@ -113,11 +169,11 @@ def text_to_mp3(text, output_path):
                     print(f"Failed to convert chunk {i}")
                     return False
                 pbar.update(1)  # Update overall progress for each chunk
-            
+
             if not wav_files:
                 print("No valid audio chunks generated.")
                 return False
-            
+
             # Merge to MP3
             if merge_wavs_to_mp3(wav_files, output_path):
                 pbar.update(1)  # Update overall progress for MP3 merge
@@ -126,13 +182,15 @@ def text_to_mp3(text, output_path):
 
 # Run the process
 if __name__ == "__main__":
-    # Check if TXT path is provided as command-line argument
-    if len(sys.argv) != 2:
-        print("Usage: python script.py /path/to/your/text_file.txt")
-        sys.exit(1)
-
-    # Get TXT path from command line
-    txt_path = sys.argv[1]
+    parser = argparse.ArgumentParser(description="Convert a .txt file to an MP3 audiobook.")
+    parser.add_argument("txt_path", help="Path to the input .txt file")
+    parser.add_argument(
+        "-l", "--lang", default="en",
+        help="Spoken language: a code (en, es, fr, de, ...) or name (english, spanish, ...). Default: en. "
+             "Requires a matching voice to be installed on your system.",
+    )
+    args = parser.parse_args()
+    txt_path = args.txt_path
 
     # Ensure the file exists and is a .txt file
     if not os.path.isfile(txt_path) or not txt_path.lower().endswith('.txt'):
@@ -150,8 +208,11 @@ if __name__ == "__main__":
 
     print(f"Text length: {len(full_text)} characters")
 
+    # Find a voice for the requested language
+    voice_id = find_voice_id(args.lang)
+
     # Convert with progress bar
-    if text_to_mp3(full_text, mp3_path):
+    if text_to_mp3(full_text, mp3_path, voice_id):
         # Verify the output file
         if os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 1024:
             print(f"Conversion complete! MP3 saved as {mp3_path}")
